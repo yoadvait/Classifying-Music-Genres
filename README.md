@@ -12,7 +12,6 @@ This project focuses on classifying music genres using a hybrid **CNN-LSTM** mod
 - [Usage](#usage)
 - [Blog](#complete-blog)
 
-
 ---
 
 ## Introduction
@@ -73,7 +72,7 @@ Follow the steps below to clone the repository, install dependencies, prepare th
 
 1. **Clone the repository**:
    ```bash
-   git clone <repo_url>
+   gh repo clone yoadvait/Classifying-Music-Genres
    cd MusicGenreClassification
    ```
 
@@ -92,12 +91,6 @@ Follow the steps below to clone the repository, install dependencies, prepare th
    (The script will preprocess the dataset, train the model, and save the trained model to the `saved_models/` folder.)
 
 5. **Make predictions** (if enabled in the script): You can make predictions on any new audio file using the GenrePredictor class.
-
-
-
-
-
-
 
 Once the model is trained, you can use it to predict the genre of new audio files. Below is a step-by-step guide on how to utilize the `GenrePredictor` class for making predictions.
 
