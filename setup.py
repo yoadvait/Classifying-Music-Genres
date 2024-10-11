@@ -12,10 +12,11 @@ def get_requirements(file_path:str)->List[str]:
     return requirements
 
 setup(
-name='MusicGenreClassification',
-version='0.1',
-author='YoAdvait',
-author_email='advait.iitd@gmail.com',
-packages=find_packages(),
-install_requires=get_requirements('requirements.txt')
+    name='MusicGenreClassification',
+    version='0.1',
+    author='YoAdvait',
+    author_email='advait.iitd@gmail.com',
+    packages=find_packages(),
+    install_requires=get_requirements('requirements.txt'),
+    description='Using Deep Learning Techniques to Classify Music Genres'
 )

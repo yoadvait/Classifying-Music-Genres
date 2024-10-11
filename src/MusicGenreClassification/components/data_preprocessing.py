@@ -56,7 +56,7 @@ class DataPreprocessor:
         logging.info("MFCCs and labels saved to disk.")
 
 def main():
-    dataset_path = "Data/genres_original"
+    dataset_path = "Data"
     
     logging.info("Starting MFCC extraction process...")
     preprocessor = DataPreprocessor(dataset_path)

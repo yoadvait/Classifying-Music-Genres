@@ -1,7 +1,11 @@
 import numpy as np
 import logging
-from keras import Sequential
-from keras import LSTM, Dense, Dropout, Flatten, Reshape, Adam, MaxPooling2D, Conv2D, BatchNormalization, EarlyStopping, to_categorical
+
+from keras._tf_keras.keras.optimizers import Adam
+from keras._tf_keras.keras.layers import Dense, Dropout, Flatten, Reshape, MaxPooling2D, Conv2D, LSTM, BatchNormalization
+from keras._tf_keras.keras.utils import to_categorical
+from keras._tf_keras.keras.models import Sequential
+from keras._tf_keras.keras.callbacks import EarlyStopping
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
@@ -22,7 +26,7 @@ class HybridModel:
     def build_model(self):
         logging.info("Building the hybrid CNN-LSTM model...")
         model = Sequential([
-            Conv2D(64, (3, 3), activation='relu', input_shape=self.input_shape, padding='same'),
+            Conv2D(64, (3, 3), activation='relu', padding='same', input_shape=self.input_shape),
             MaxPooling2D((2, 2), padding='same'),
             BatchNormalization(),
             Dropout(0.3),
@@ -39,7 +43,7 @@ class HybridModel:
 
             Flatten(),
 
-            Reshape((17, 128)),
+            Reshape((128,33)),
 
             LSTM(128, return_sequences=True),
             Dropout(0.3),
@@ -47,26 +51,36 @@ class HybridModel:
             LSTM(64, return_sequences=False),
             Dropout(0.3),
 
-            Dense(128, activation='relu'),
+            Dense(64, activation='relu'),
             Dropout(0.3),
 
-            Dense(64, activation='relu'),
+            Dense(32, activation='relu'),
             Dropout(0.3),
 
             Dense(self.num_classes, activation='softmax')
         ])
         return model
 
+
     def train_model(self, mfccs_path, labels_path, model_save_path):
         mfccs, labels = self.load_data(mfccs_path, labels_path)
 
+        if mfccs.size == 0 or labels.size == 0:
+            logging.error("No data found in the loaded MFCCs or labels. Please check the input files.")
+
+        mfccs = mfccs.reshape(-1, 259, 13, 1)
+            
         label_encoder = LabelEncoder()
         labels_encoded = label_encoder.fit_transform(labels)
         labels_categorical = to_categorical(labels_encoded, self.num_classes)
+        if len(mfccs) > 0:
+            X_train, X_test, y_train, y_test = train_test_split(mfccs, labels_categorical, test_size=0.2, random_state=42)
+        else:
+            logging.error("No samples to split. Check the input data.")
+            return
 
-        X_train, X_test, y_train, y_test = train_test_split(mfccs, labels_categorical, test_size=0.2, random_state=42)
-
-        self.model.compile(optimizer=Adam(learning_rate=0.001), loss='categorical_crossentropy', metrics=['accuracy'])
+        adam1 = Adam(learning_rate=0.001)
+        self.model.compile(optimizer=adam1, loss='categorical_crossentropy', metrics=['accuracy'])
         early_stopping = EarlyStopping(monitor='val_accuracy', patience=20, restore_best_weights=True)
 
         logging.info("Training the model...")
@@ -78,7 +92,7 @@ class HybridModel:
 if __name__ == "__main__":
     MFCCS_PATH = "Data/mfccs.npy"
     LABELS_PATH = "Data/labels.npy"
-    MODEL_SAVE_PATH = "saved_models/hybrid_model.h5"
+    MODEL_SAVE_PATH = "saved_models/saved_model.pb"
     NUM_CLASSES = 10
 
     hybrid_model = HybridModel(input_shape=(130, 13, 1), num_classes=NUM_CLASSES)

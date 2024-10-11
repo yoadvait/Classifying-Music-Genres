@@ -12,12 +12,13 @@ logger = setup_logger("MusicGenreClassification")
 def main():
     logging.basicConfig(level=logging.INFO)
 
-    dataset_path = "Data/genres_original"
+    dataset_path = "Data"
     mfccs_path = "Data/mfccs.npy"
     labels_path = "Data/labels.npy"
-    model_save_path_hybrid = "saved_models/hybrid_model.h5"
-    model_save_path_lstm = "saved_models/lstm_model.h5"
+    model_save_path_hybrid = "saved_models/hybrid_model"
+
     num_classes = 10
+    input_shape = (259, 13, 1)
 
     try:
         logging.info("Music genre classification pipeline started...")
@@ -32,12 +33,12 @@ def main():
             logging.info(f"Using existing MFCCs and labels from {mfccs_path} and {labels_path}.")
 
         logging.info("Initiating model training...")
-        trainer = HybridModel()
-        trainer.train_model(mfccs_path, labels_path, model_save_path_hybrid, num_classes)
+        trainer = HybridModel(input_shape=input_shape, num_classes=num_classes)
+        trainer.train_model(mfccs_path, labels_path, model_save_path_hybrid)
         logging.info("Model training complete.")
 
         logging.info("Making predictions on test data...")
-        test_file_path = "path_to_test_audio.wav"
+        test_file_path = "country.00092.wav"
         predictor = GenrePredictor(model_save_path_hybrid)
         predicted_genre = predictor.make_prediction(test_file_path)
         logging.info(f"Predicted Genre: {predicted_genre}")
