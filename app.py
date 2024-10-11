@@ -15,7 +15,7 @@ def main():
     dataset_path = "Data"
     mfccs_path = "Data/mfccs.npy"
     labels_path = "Data/labels.npy"
-    model_save_path_hybrid = "saved_models/hybrid_model"
+    model_save_path = "saved_models/hybrid.h5"
 
     num_classes = 10
     input_shape = (259, 13, 1)
@@ -34,14 +34,14 @@ def main():
 
         logging.info("Initiating model training...")
         trainer = HybridModel(input_shape=input_shape, num_classes=num_classes)
-        trainer.train_model(mfccs_path, labels_path, model_save_path_hybrid)
+        trainer.train_model(mfccs_path, labels_path, model_save_path)
         logging.info("Model training complete.")
 
-        logging.info("Making predictions on test data...")
-        test_file_path = "country.00092.wav"
-        predictor = GenrePredictor(model_save_path_hybrid)
-        predicted_genre = predictor.make_prediction(test_file_path)
-        logging.info(f"Predicted Genre: {predicted_genre}")
+        # logging.info("Making predictions on test data...")
+        # test_file_path = "country.00092.wav"
+        # predictor = GenrePredictor(model_save_path/hybrid.h5)
+        # predicted_genre = predictor.make_prediction(test_file_path)
+        # logging.info(f"Predicted Genre: {predicted_genre}")
 
     except Exception as e:
         logging.error(f"An error occurred: {e}")

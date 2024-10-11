@@ -87,13 +87,15 @@ class HybridModel:
         self.model.fit(X_train, y_train, epochs=300, batch_size=32, validation_data=(X_test, y_test), callbacks=[early_stopping])
 
         self.model.save(model_save_path)
+
+        self.model.sa
         logging.info(f"Model saved to {model_save_path}")
 
 if __name__ == "__main__":
     MFCCS_PATH = "Data/mfccs.npy"
     LABELS_PATH = "Data/labels.npy"
-    MODEL_SAVE_PATH = "saved_models/saved_model.pb"
+    MODEL_SAVE_PATH = "saved_models.hybrid.h5"
     NUM_CLASSES = 10
 
-    hybrid_model = HybridModel(input_shape=(130, 13, 1), num_classes=NUM_CLASSES)
+    hybrid_model = HybridModel(input_shape=(259, 13, 1), num_classes=NUM_CLASSES)
     hybrid_model.train_model(MFCCS_PATH, LABELS_PATH, MODEL_SAVE_PATH)

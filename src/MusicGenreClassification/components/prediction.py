@@ -31,8 +31,8 @@ class GenrePredictor:
         return predicted_class
 
 if __name__ == "__main__":
-    MODEL_PATH = "saved_models/saved_model.pb"
-    TEST_TRACK_PATH = "path/to/test_track.wav"
+    MODEL_PATH = "saved_models/hybrid.h5"
+    TEST_TRACK_PATH = "country.00092.wav"
 
     genre_predictor = GenrePredictor(model_path=MODEL_PATH)
     
